@@ -34,7 +34,5 @@ public class MarkdownParse {
         ArrayList<String> links = getLinks(content);
 	    System.out.println(links);
         
-        System.out.println("hello world");
-        
     }
 }
