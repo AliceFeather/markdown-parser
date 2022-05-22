@@ -14,15 +14,34 @@ public class MarkdownParse {
         while(currentIndex < markdown.length()) {
             int openBracket = markdown.indexOf("[", currentIndex);
             int closeBracket = markdown.indexOf("]", openBracket);
+            if (openBracket == -1 && closeBracket != -1 ){
+                break;
+            }
+            
             int openParen = markdown.indexOf("(", closeBracket);
             int closeParen = markdown.indexOf(")", openParen);
             if(openBracket == -1 || closeBracket == -1 || openParen == -1 || closeParen == -1){
                 break;
             }
-            else{
-                toReturn.add(markdown.substring(openParen + 1, closeParen));
+            
+            int newLineAfterOB = markdown.indexOf("\n", openBracket);
+
+            if(newLineAfterOB < closeParen && newLineAfterOB > openBracket){
                 currentIndex = closeParen + 1;
+                continue;
             }
+
+            // check if it is an image
+            if (openBracket != markdown.length() && openBracket != 0){
+                if (!(markdown.substring(openBracket-1, openBracket).equals("!"))){
+                    String link = markdown.substring(openParen + 1, closeParen);
+                    link = link.trim();
+                    if (!link.isEmpty()){
+                        toReturn.add(link);
+                    }
+                }
+            }
+            currentIndex = closeParen + 1;
         }
         return toReturn;
     }
